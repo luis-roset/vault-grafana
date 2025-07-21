@@ -3,7 +3,7 @@
 ## Vault cluster config file creation
 
 ```
-cat > ./Vault/vault-config/server.hcl << EOF
+cat > ./Vault-config/vault-config/server.hcl << EOF
 api_addr  = "http://127.0.0.1:8200"
 
 listener "tcp" {
@@ -33,8 +33,8 @@ docker run \
     --network learn-vault \
     -p 8200:8200 \
     --rm \
-    --volume ./Vault/vault-config:/vault/config \
-    --volume ./Vault/vault-data:/vault/data \
+    --volume ./Vault-config/vault-config:/vault/config \
+    --volume ./Vault-config/vault-data:/vault/data \
     hashicorp/vault server    
 ```
 
@@ -75,12 +75,12 @@ EOF
 vault token create \
   -field=token \
   -policy prometheus-metrics \
-  > ./prometheus-config/prometheus-token
+  > ./Prometheus-config/prometheus-token
 ```
 
 ### Configure the prometheus.yml file and dowload latest prometheus image
 ```
-cat > ./prometheus-config/prometheus.yml << EOF
+cat > ./Prometheus-config/prometheus.yml << EOF
 scrape_configs:
   - job_name: vault
     metrics_path: /v1/sys/metrics
@@ -106,14 +106,14 @@ docker run \
     --network learn-vault \
     -p 9090:9090 \
     --rm \
-    --volume ./prometheus-config/prometheus.yml:/etc/prometheus/prometheus.yml \
-    --volume ./prometheus-config/prometheus-token:/etc/prometheus/prometheus-token \
+    --volume ./Prometheus-config/prometheus.yml:/etc/prometheus/prometheus.yml \
+    --volume ./Prometheus-config/prometheus-token:/etc/prometheus/prometheus-token \
     prom/prometheus
 ```
 
 ### Create the Grafana configuration and pull latest image
 ```
-cat > ./grafana-config/datasource.yml << EOF
+cat > ./Grafana-config/datasource.yml << EOF
 # config file version
 apiVersion: 1
 
@@ -157,7 +157,7 @@ docker run \
     --network learn-vault \
     -p 3000:3000 \
     --rm \
-    --volume ./grafana-config/datasource.yml:/etc/grafana/provisioning/datasources/prometheus_datasource.yml \
+    --volume ./Grafana-config/datasource.yml:/etc/grafana/provisioning/datasources/prometheus_datasource.yml \
     grafana/grafana
 ```
 
